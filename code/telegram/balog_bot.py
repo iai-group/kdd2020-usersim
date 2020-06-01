@@ -1,6 +1,8 @@
 """
-Telegram Bot (Channel)
-======================
+BalogBot class
+==============
+
+https://www.codementor.io/garethdwyer/building-a-telegram-bot-using-python-part-1-goi5fncay
 
 Author: Shuo Zhang
 """
@@ -9,12 +11,10 @@ import json
 import requests
 import time
 import urllib
-from telegram.dbhelper import DBHelper
+from code.telegram.dbhelper import DBHelper
+from config import TOKEN, URL
 
 db = DBHelper()
-
-TOKEN = "994935534:AAG8hjL-0duH6xUzd6rq96JZfkHI0ZAZE-g"
-URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 
 
 class BalogBot:

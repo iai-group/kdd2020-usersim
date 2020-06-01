@@ -1,3 +1,3 @@
 """
-We use telegram to collect dialogues.
+We use telegram to collect human-machine dialogues.
 """
