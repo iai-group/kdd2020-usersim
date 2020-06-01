@@ -13,7 +13,6 @@ from nltk.tokenize import word_tokenize
 from code.nlp.nlu import NLU
 from config import location
 import pandas as pd
-import json
 import re
 import os
 

@@ -2,7 +2,7 @@
 Base natural language understanding class
 =========================================
 
-Class for entity linking method.
+Abstract class for entity linking method.
 
 Author: Shuo Zhang, Krisztian Balog
 """

@@ -2,7 +2,7 @@
 Natural Language Generator
 ==========================
 
-Class for generating natural lanauge response.
+Abstract class for generating natural language response.
 
 Author Shuo Zhang
 """
