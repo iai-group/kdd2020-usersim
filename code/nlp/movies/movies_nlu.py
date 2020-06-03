@@ -8,37 +8,15 @@ Author: Shuo Zhang, Krisztian Balog
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from config import AGENT_TAG, current_location
+from code.nlp.movies import *
 from nltk.tokenize import word_tokenize
 from code.nlp.nlu import NLU
-from config import location
 import pandas as pd
 import re
 import os
 
-INTENT_MOVIE_LIST = [
-    "Clarify", "List", "Similar"
-]
 
-UTTERANCE_PATTERN = {
-    "Search results: 1. (.*) 2. (.*) 3. (.*) 4. (.*) 5. (.*)Which options matches your title search -----g-: 1, 2, 3, 4 or 5Type a new one if none matches!": "1\. (.*) 2\. (.*) 3\. (.*) 4\. (.*) 5\. (.*)Which options matches",
-    "Here are a couple of movies for you! 1. (.*) 2. (.*) 3. (.*)Which film do you have an interest? Just paste the name": "1\. (.*)2\. (.*)3\. (.*)Which film do you have",
-    'There is a movie named "(.*)". Have you watched it?': 'There is a movie named "(.*)". Have you watched it?',
-    'Have you watched "(.*)"? It can be a good recommendation.': 'Have you watched "(.*)"\? It can be a good recommendation.',
-    'Thank you for your feedback. There is a movie named "(.*)". Have you watched it?': 'Thank you for your feedback. There is a movie named "(.*)". Have you watched it?',
-    'Thank you for reviewing the movie. There is a movie named "(.*)". Have you watched it?': 'Thank you for reviewing the movie. There is a movie named "(.*)". Have you watched it?',
-    'Thank you for reviewing the movie. Have you watched "(.*)"? It can be a good recommendation.': 'Thank you for reviewing the movie. Have you watched "(.*)"\? It can be a good recommendation.',
-    'Thank you for your feedback. Have you watched "(.*)"? It can be a good recommendation.': 'Thank you for your feedback. Have you watched "(.*)"\? It can be a good recommendation.',
-    "You should try (.*)!": "You should try (.*)!",
-    "There's also (.*)!": "There's also (.*)!",
-    "Also check out (.*)!": "Also check out (.*)!",
-    "I found (.*) for you!": "I found (.*) for you!",
-    "I also found (.*)!": "I also found (.*)!",
-    "I think you should give (.*) a shot!": "I think you should give (.*) a shot!"
-}
-
-REPLACE_BY_SPACE_RE = re.compile('[/(){}\[\]\|@,;]')
-BAD_SYMBOLS_RE = re.compile('[^0-9a-z #+_]')
+PRE_FILE = "code/nlp/metadata_prep.csv"
 
 
 class MoviesNLU(NLU):
@@ -50,8 +28,7 @@ class MoviesNLU(NLU):
 
     def naive_index(self):
         """Loads MovieLens dataset as local index."""
-        metadata = pd.read_csv(
-            os.path.join(location, 'metadata_prep.csv'))  # cf. user/ml-20m/data_pre for data preparation
+        metadata = pd.read_csv(PRE_FILE)  # cf. user/ml-20m/data_pre for data preparation
         titles = metadata['title'].tolist()
         docs = [self.text_prepare(title) for title in titles if isinstance(title, str)]
         titles_all = [title for title in titles if isinstance(title, str)]
