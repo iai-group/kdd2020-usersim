@@ -7,6 +7,10 @@ This nlp package provides classes for entity linking and natural language genera
 Author: Shuo Zhang
 """
 
+import re
+
+AGENT_TAG = "agent"
+
 INTENT_MOVIE_LIST = [
     "Clarify", "List", "Similar"
 ]
@@ -28,13 +32,8 @@ UTTERANCE_PATTERN = {
     "I think you should give (.*) a shot!": "I think you should give (.*) a shot!"
 }
 
-AGENT_TAG = "agent"
-import re
-
 REPLACE_BY_SPACE_RE = re.compile('[/(){}\[\]\|@,;]')
 BAD_SYMBOLS_RE = re.compile('[^0-9a-z #+_]')
-
-
 
 RESPONSE_TEMPLATES = {
     "ask_genre": [
@@ -474,4 +473,3 @@ RESPONSE_TEMPLATES_AC = {
         "show me more related movie please"
     ]
 }
-

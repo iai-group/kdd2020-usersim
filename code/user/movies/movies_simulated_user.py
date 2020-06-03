@@ -132,20 +132,24 @@ class MovieSimulatedUser(SimulatedUser, UserGenerator, MoviesNLG, MoviesNLU):
                     if response["intent"][-1] in INTENT_MOVIE_LIST:  # Bot provides movie options
                         _, _, self._current_movie, current_movie_genre = self.link_entities(text=utterance[-1])[0]
                         if self._current_movie in self.user.preferences[0]:  # user has watched this movie
-                            if self._current_intent in ["Note-yes", "Note"]:  # when asked if has watched or not, force YES
+                            if self._current_intent in ["Note-yes",
+                                                        "Note"]:  # when asked if has watched or not, force YES
                                 self._current_intent = "Note-yes"
                             elif self._current_intent == "Disclose-review":  # when aske the reviews, assign the preference based on the personal
-                                if self.user.preferences[0].get(self._current_movie) == 1:  # lookup the persona to tell if like or dislike
+                                if self.user.preferences[0].get(
+                                        self._current_movie) == 1:  # lookup the persona to tell if like or dislike
                                     self._current_intent = "Disclose-review-like"
                                 else:
                                     self._current_intent = "Disclose-review-dislike"
                         else:  # user has not watched it yet
-                            if self._current_intent in ["Note-dislike", "Note-end", "Complete"]:  # user is about to give a final perference
-                                if sum([self.user.preferences[1].get(g, 0) for g in current_movie_genre]) >= 0:  # decide if like or dislike a movie based on personal genres
+                            if self._current_intent in ["Note-dislike", "Note-end",
+                                                        "Complete"]:  # user is about to give a final perference
+                                if sum([self.user.preferences[1].get(g, 0) for g in
+                                        current_movie_genre]) >= 0:  # decide if like or dislike a movie based on personal genres
 
                                     self._current_intent = "Note-end"  # force the intent as like
                                     self.updat_persona(self._current_movie, 1.5)  # update the movie into persona
-                                    self._agenda = [] # Empty the agenda and force to close the session
+                                    self._agenda = []  # Empty the agenda and force to close the session
                                 else:
                                     self._current_intent = "Note-dislike"
                                     self.updat_persona(self._current_movie, -1.5)  # update the movie into persona
@@ -175,11 +179,13 @@ class MovieSimulatedUser(SimulatedUser, UserGenerator, MoviesNLG, MoviesNLU):
                     if response["intent"][-1] in INTENT_MOVIE_LIST:  # Bot provides movie options
                         _, _, self._current_movie, current_movie_genre = self.link_entities(text=utterance[-1])[0]
                     if response["intent"][-1] in ["Subset", "Show"]:
-                        if self._current_intent in ["Note-dislike", "Note", "Complete"]:  # user is about to give a final perference
-                            if sum([self.user.preferences[1].get(g, 0) for g in current_movie_genre]) >= 0:  # decide if like or dislike a movie based on personal genres
+                        if self._current_intent in ["Note-dislike", "Note",
+                                                    "Complete"]:  # user is about to give a final perference
+                            if sum([self.user.preferences[1].get(g, 0) for g in
+                                    current_movie_genre]) >= 0:  # decide if like or dislike a movie based on personal genres
                                 self._current_intent = "Note"  # force the intent as like
                                 self.updat_persona(self._current_movie, 1.5)  # update the movie into persona
-                                self._agenda = [] # Empty the agenda and force to close the session
+                                self._agenda = []  # Empty the agenda and force to close the session
                             else:
                                 self._current_intent = "Note-dislike"
                                 self.updat_persona(self._current_movie, -1.5)  # update the movie into persona
@@ -208,7 +214,8 @@ class MovieSimulatedUser(SimulatedUser, UserGenerator, MoviesNLG, MoviesNLU):
                     self._current_movie = movie
                 else:
                     print("----", response["intent"])
-                    if len(response["intent"]) > 1 and response["intent"][1] in INTENT_MOVIE_LIST :  # Bot provides movie options
+                    if len(response["intent"]) > 1 and response["intent"][
+                        1] in INTENT_MOVIE_LIST:  # Bot provides movie options
                         _, _, self._current_movie, current_movie_genre = self.link_entities(text=utterance[1])[0]
                         if self._current_movie in self.user.preferences[0]:  # user has watched this movie
                             if self._current_intent in ["Back", "Similar"]:  # when asked if has watched or not,
@@ -217,13 +224,14 @@ class MovieSimulatedUser(SimulatedUser, UserGenerator, MoviesNLG, MoviesNLU):
                             # if self._current_intent in ["Note", "Complete"]:  # user is about to give a final perference
                             #     print("!!!!!!!!!")
                             print("!!!!!!")
-                            if sum([self.user.preferences[1].get(g, 0) for g in current_movie_genre]) >= 0:  # decide if like or dislike a movie based on personal genres
+                            if sum([self.user.preferences[1].get(g, 0) for g in
+                                    current_movie_genre]) >= 0:  # decide if like or dislike a movie based on personal genres
                                 self._current_intent = "Note"  # force the intent as like
                                 self.updat_persona(self._current_movie, 1.5)  # update the movie into persona
                                 print("before", self.agenda)
                                 p = random.uniform(0, 1)
                                 if P > 0.5:
-                                    self._agenda = ["Complete"] # Empty the agenda and force to close the session
+                                    self._agenda = ["Complete"]  # Empty the agenda and force to close the session
                                 else:
                                     self._agenda = []
                             else:

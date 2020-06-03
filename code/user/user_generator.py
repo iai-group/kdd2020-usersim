@@ -21,12 +21,9 @@ import random
 import csv
 import os
 
-
-
 MOVIELEN_PATH = ""
 MOVIE_FILE = "code/user/movies.csv"
 RATING_FILE = "code/user/ratings.csv"
-
 
 
 class UserGenerator:
@@ -43,7 +40,7 @@ class UserGenerator:
             csv_data = csv.reader(f)
             next(csv_data, None)
             for i, line in enumerate(csv_data):
-                mov[line[0]] = { "title": line[1], "genres": line[2] }
+                mov[line[0]] = {"title": line[1], "genres": line[2]}
         return mov
 
     def samp(self, pro, dist, attribute):
@@ -54,9 +51,8 @@ class UserGenerator:
             if pro < acc_pro:
                 return attribute[i]
 
-
     @staticmethod
-    def rate_pre(rate, divisions = [4, 2]):
+    def rate_pre(rate, divisions=[4, 2]):
         """Preference rate higher than 4 is taken as positive, lower than 2 is negative"""
         if float(rate) >= divisions[0]:
             return 1
@@ -64,7 +60,6 @@ class UserGenerator:
             return -1
         else:
             return 0
-
 
     def rates(self, if_title=True):
         """
@@ -86,7 +81,7 @@ class UserGenerator:
                 genres = self.__mov.get(movieId).get("genres")
                 title = self.__mov.get(movieId).get("title")
                 if userId not in user_all:
-                    user_all[userId] = { "movies": {}, "genres": {} }
+                    user_all[userId] = {"movies": {}, "genres": {}}
                 if if_title:
                     user_all[userId]["movies"][title] = self.rate_pre(rate=rating)
                 else:
@@ -96,7 +91,6 @@ class UserGenerator:
                         user_all[userId]["genres"][genre] = []
                     user_all[userId]["genres"][genre].append(rating)
         return user_all
-
 
     def initial(self, num_user=5, num_movie=8, num_genre=8, if_title=True):
         """
@@ -115,7 +109,8 @@ class UserGenerator:
             movie = {v: user_all.get(userID).get("movies")[v] for v in
                      [list(user_all.get(userID).get("movies").keys())[k] for k in range(num_movie)]}
             genres = user_all.get(userID).get("genres")
-            genres_norm = {k: self.rate_pre(sum([float(k) for k in v]) / len(v), divisions=[3.5, 2]) for k, v in genres.items()}
+            genres_norm = {k: self.rate_pre(sum([float(k) for k in v]) / len(v), divisions=[3.5, 2]) for k, v in
+                           genres.items()}
             genres_samp = {v: genres_norm[v] for v in [list(genres_norm.keys())[k] for k in range(num_genre)]}
             user = SimulatedUser(persona={}, preferences=[movie, genres_samp])
             user.print_user()

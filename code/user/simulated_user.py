@@ -37,4 +37,3 @@ class SimulatedUser(User):
     def updat_persona(self, movie, rate):
         # Update pereference by adding new movie
         self.preferences[0][movie] = rate
-

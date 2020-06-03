@@ -5,7 +5,6 @@ Simple NLU for the movie domain
 Author: Shuo Zhang, Krisztian Balog
 """
 
-
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from code.nlp.movies import *
@@ -13,8 +12,6 @@ from nltk.tokenize import word_tokenize
 from code.nlp.nlu import NLU
 import pandas as pd
 import re
-import os
-
 
 PRE_FILE = "code/nlp/metadata_prep.csv"
 

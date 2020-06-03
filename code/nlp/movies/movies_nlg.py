@@ -11,8 +11,6 @@ from code.nlp.movies import *
 import random
 
 
-
-
 class MoviesNLG(NLG):
     """Movies NLG"""
 
