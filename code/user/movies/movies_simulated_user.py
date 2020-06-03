@@ -7,11 +7,12 @@ Author: Shuo Zhang
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+
 from config import INTENT_MATCH, USER_TAG, AGENT_TAG
 from code.user.simulated_user import SimulatedUser
 from code.user.user_generator import UserGenerator
-from code.nlp.movies.movies_nlg import MoviesNLG, RESPONSE_TEMPLATES_MS, RESPONSE_TEMPLATES_MB, RESPONSE_TEMPLATES_AC
-from code.nlp.movies.movies_nlu import MoviesNLU
+from code.nlp.movies import MoviesNLG, RESPONSE_TEMPLATES_MS, RESPONSE_TEMPLATES_MB, RESPONSE_TEMPLATES_AC
+from code.nlp.movies import MoviesNLU
 from config import current_location, QUERY, FEEDBACK, REQUEST, ANSWER
 from code.user.movies.qrfa import qrfa_agenda_generate, count1
 import random
