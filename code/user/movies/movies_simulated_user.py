@@ -12,7 +12,6 @@ from code.user.simulated_user import SimulatedUser
 from code.user.user_generator import UserGenerator
 from code.nlp.movies.movies_nlg import MoviesNLG, RESPONSE_TEMPLATES_MS, RESPONSE_TEMPLATES_MB, RESPONSE_TEMPLATES_AC
 from code.nlp.movies.movies_nlu import MoviesNLU
-from pprint import pprint
 from config import current_location, QUERY, FEEDBACK, REQUEST, ANSWER
 from code.user.movies.qrfa import qrfa_agenda_generate, count1
 import random
