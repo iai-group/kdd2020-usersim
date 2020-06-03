@@ -8,19 +8,42 @@ Author: Shuo Zhang
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from config import INTENT_MATCH, USER_TAG, AGENT_TAG
+from code.user.movies import INTENT_MATCH, USER_TAG, AGENT_TAG, QUERY, FEEDBACK, REQUEST, ANSWER, count1, count, INTENT_MOVIE_LIST
 from code.user.simulated_user import SimulatedUser
 from code.user.user_generator import UserGenerator
-from code.nlp.movies import MoviesNLG, RESPONSE_TEMPLATES_MS, RESPONSE_TEMPLATES_MB, RESPONSE_TEMPLATES_AC
-from code.nlp.movies import MoviesNLU
-from config import current_location, QUERY, FEEDBACK, REQUEST, ANSWER
-from code.user.movies.qrfa import qrfa_agenda_generate, count1
+from code.nlp.movies import RESPONSE_TEMPLATES_MS, RESPONSE_TEMPLATES_MB, RESPONSE_TEMPLATES_AC
+from code.nlp.movies.movies_nlu import MoviesNLU
+from code.nlp.movies.movies_nlg import MoviesNLG
 import random
 import json
 import os
 
-INTENT_MOVIE_LIST = ["Clarify", "List", "Similar"]  # intents of utterances that likely have movies.
 
+
+def qrfa_agenda_generate(file):
+    scores = {}
+    diags = json.load(open(os.path.join("", file)))
+    for k, v in diags.items():
+        agenda = state_map(v)
+        tmp = []
+        for i in range(1, len(agenda) - 2):
+            tmp.append(count.get(agenda[i]).get(agenda[i + 1]))
+        scores[k] = sum(tmp) / len(tmp)
+    top_list = [j[0] for j in sorted(scores.items(), key=lambda kv: kv[1], reverse=True) if
+                len([n for n in diags[j[0]] if n[0] == USER_TAG]) > 3][:10]
+    agenda_list = [[m[2] for m in diags.get(item) if m[0] == USER_TAG] for item in top_list]
+    return agenda_list
+
+def state_map(agenda):
+    agenda_map = []
+    for item in agenda:
+        if item[0] == USER_TAG:
+            label = "QUERY" if item[2] in QUERY else "FEEDBACK"
+        elif item[0] == AGENT_TAG:
+            label = "REQUEST" if item[2] in REQUEST else "ANSWER"
+        agenda_map.append(label)
+    agenda_map = ["START"] + agenda_map + ["STOP"]
+    return agenda_map
 
 class MovieSimulatedUser(SimulatedUser, UserGenerator, MoviesNLG, MoviesNLU):
     """Simulated user for movie domain"""
@@ -353,33 +376,6 @@ if __name__ == "__main__":
     msu.user.print_user()
     agenda_list, agenda_stat, agenda_stat_qrfa, intent_map, agent_user_intent, tfidf_matrix, tfidf_fit = file_process(
         file="1225_mb.json")
-    # pprint(intent_map)
-    # msu.init_agenda()
-    # msu.init_agenda_qrfa()
     msu.init_agenda_qrfa_test()
-    # print(msu.annotate_bot_intent("I didn't understand. You can try rephrasing.Cool!"))
-    # print(msu.user.user())
-    # pprint(agent_user_intent)
 
-    # def load_preferences(self, preferences):
-    # Load the preferences from the list of "preferences"
-    #
-    # :param preferences: [movie, genres] movie: {title: 1/-1}; genres: {genre: 1/-1}
-    # """
-    # movie, genres_samp = preferences
-    # self.preferences["movies"]["title"] = [{"title": k, "preference": v} for k, v in movie.items()]
-    # self.preferences["movies"]["genre"] = [{"genre": k, "preference": v} for k, v in genres_samp.items()]
 
-    # def preference_update(self, new_pre, item):
-    #     """
-    #     Update preference if it is not conflicting with the existing ones.
-    #
-    #     TODO: this is movie-specific, it shouldn't be in this class
-    #
-    #     :param new_pre: [movie/genre, 1/-1]
-    #     :param item: movie or genre
-    #     :return:
-    #     """
-    #     key = "genre" if item == "genre" else "title"
-    #     if new_pre[0] not in [i[key] for i in self.preferences.get("movies").get(item)]:
-    #         self.preferences["movies"][k].append({key: new_pre[0], "preference": new_pre[1]})
