@@ -8,7 +8,8 @@ Author: Shuo Zhang
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from code.user.movies import INTENT_MATCH, USER_TAG, AGENT_TAG, QUERY, FEEDBACK, REQUEST, ANSWER, count1, count, INTENT_MOVIE_LIST
+from code.user.movies import INTENT_MATCH, USER_TAG, AGENT_TAG, QUERY, FEEDBACK, \
+    REQUEST, ANSWER, count1, count, INTENT_MOVIE_LIST
 from code.user.simulated_user import SimulatedUser
 from code.user.user_generator import UserGenerator
 from code.nlp.movies import RESPONSE_TEMPLATES_MS, RESPONSE_TEMPLATES_MB, RESPONSE_TEMPLATES_AC
@@ -17,7 +18,6 @@ from code.nlp.movies.movies_nlg import MoviesNLG
 import random
 import json
 import os
-
 
 
 def qrfa_agenda_generate(file):
@@ -34,6 +34,7 @@ def qrfa_agenda_generate(file):
     agenda_list = [[m[2] for m in diags.get(item) if m[0] == USER_TAG] for item in top_list]
     return agenda_list
 
+
 def state_map(agenda):
     agenda_map = []
     for item in agenda:
@@ -44,6 +45,7 @@ def state_map(agenda):
         agenda_map.append(label)
     agenda_map = ["START"] + agenda_map + ["STOP"]
     return agenda_map
+
 
 class MovieSimulatedUser(SimulatedUser, UserGenerator, MoviesNLG, MoviesNLU):
     """Simulated user for movie domain"""
@@ -149,7 +151,7 @@ class MovieSimulatedUser(SimulatedUser, UserGenerator, MoviesNLG, MoviesNLU):
                     genres = [k for k, v in self.user.user().get("preferences")[1].items() if
                               v == 1]  # Randomly sampled a favored genre
                     genre = genres[random.randint(0, len(genres) - 1)]
-                    # todo: based on a movie and select a genre.....
+                    # Based on a movie and select a genre.....
                     generated_response = self.generate_response_text(self._current_intent, {"genre": genre})
                     self._current_genre = genre  # Update the current genre that the user disclose
                 else:
@@ -237,7 +239,7 @@ class MovieSimulatedUser(SimulatedUser, UserGenerator, MoviesNLG, MoviesNLU):
                     generated_response = self.generate_response_text(self._current_intent, {"movie": movie})
                     self._current_movie = movie
                 else:
-                    print("----", response["intent"])
+                    print(response["intent"])
                     if len(response["intent"]) > 1 and response["intent"][
                         1] in INTENT_MOVIE_LIST:  # Bot provides movie options
                         _, _, self._current_movie, current_movie_genre = self.link_entities(text=utterance[1])[0]
@@ -245,16 +247,13 @@ class MovieSimulatedUser(SimulatedUser, UserGenerator, MoviesNLG, MoviesNLU):
                             if self._current_intent in ["Back", "Similar"]:  # when asked if has watched or not,
                                 self._current_intent = "Similar"
                         else:  # user has not watched it yet
-                            # if self._current_intent in ["Note", "Complete"]:  # user is about to give a final perference
-                            #     print("!!!!!!!!!")
-                            print("!!!!!!")
                             if sum([self.user.preferences[1].get(g, 0) for g in
                                     current_movie_genre]) >= 0:  # decide if like or dislike a movie based on personal genres
                                 self._current_intent = "Note"  # force the intent as like
                                 self.updat_persona(self._current_movie, 1.5)  # update the movie into persona
                                 print("before", self.agenda)
                                 p = random.uniform(0, 1)
-                                if P > 0.5:
+                                if p > 0.5:
                                     self._agenda = ["Complete"]  # Empty the agenda and force to close the session
                                 else:
                                     self._agenda = []
@@ -291,6 +290,7 @@ class MovieSimulatedUser(SimulatedUser, UserGenerator, MoviesNLG, MoviesNLU):
             atrr.append(k)
         return self.samp(p, dist, atrr)
 
+
     def annotate_bot_intent(self, utterance):
         """
         Annotate the bot reply by intent: if there is no exactly the same sentence, find the one with the best cosine similarity.
@@ -325,7 +325,7 @@ def file_process(file="1224_ms.json"):
             label = "shit"
         return label
 
-    diags = json.load(open(os.path.join(current_location, "dialog/record", file)))
+    diags = json.load(open(os.path.join("", file)))
     agenda_list = [[i[2] for i in diag if i[0] == USER_TAG] for k, diag in diags.items()]  # [[user agenda list]]
     agenda_stat = {}  # {user_intent: {next_user_intent: occurrence}}
     for agenda in agenda_list:
@@ -377,5 +377,3 @@ if __name__ == "__main__":
     agenda_list, agenda_stat, agenda_stat_qrfa, intent_map, agent_user_intent, tfidf_matrix, tfidf_fit = file_process(
         file="1225_mb.json")
     msu.init_agenda_qrfa_test()
-
-

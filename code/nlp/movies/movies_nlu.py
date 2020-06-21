@@ -13,7 +13,7 @@ from code.nlp.nlu import NLU
 import pandas as pd
 import re
 
-PRE_FILE = "code/nlp/metadata_prep.csv"
+PRE_FILE = "code/data/metadata_prep.csv"
 
 
 class MoviesNLU(NLU):
