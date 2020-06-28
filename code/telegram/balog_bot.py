@@ -12,7 +12,7 @@ import requests
 import time
 import urllib
 from code.telegram.dbhelper import DBHelper
-from config import TOKEN, URL
+from code.telegram import TOKEN, URL
 
 db = DBHelper()
 
