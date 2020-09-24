@@ -1,6 +1,0 @@
-"""
-DIALOG
-======
-
-Author: Shuo Zhang
-"""
